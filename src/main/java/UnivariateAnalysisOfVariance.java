@@ -83,7 +83,7 @@ public class UnivariateAnalysisOfVariance {
     private double findEstimationOfIntragroupVariance(boolean printing){
         if(printing){
         System.out.printf("S2 = %.3f/(%d-%d) = %.3f\n", Q2, col*row, row, Q2/(col*row-row));}
-        return Q1/(col-2);
+        return Q2/(col*row-row);
     }
 
     private double observation(boolean printing){
