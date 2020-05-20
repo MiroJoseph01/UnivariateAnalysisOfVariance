@@ -22,9 +22,12 @@ public class UnivariateAnalysisOfVariance {
         row = X.length;
         col = X[0].length;
         groupAverages = findGroupAverages(printing);
-        totalAverage=findTotalAverage(printing);
-        Q1 = 4980;//TODO
-        Q2 = 7270;//TODO
+        totalAverage = findTotalAverage(printing);
+
+        //Q1 = 4980;
+        //Q2 = 7270;
+        Q1 = findQ1(true);
+        Q2= findQ2(true);
         estimationOfIntergroupVariance=findEstimationOfIntergroupVariance(true);
         estimationOfIntragroupVariance=findEstimationOfIntragroupVariance(true);
         Kobs=observation(true);
@@ -71,8 +74,54 @@ public class UnivariateAnalysisOfVariance {
         return sum/(col-1);
     }
 
-    //private findQ1(boolean printing){} TODO
-    //private findQ2(boolean printing){} TODO
+
+    private double findQ1(boolean printing){
+        double temp = 0;
+        if (printing) System.out.printf("\nQ1 = %d(", col);
+
+        for (int i = 0; i < groupAverages.size(); i++) {
+            temp = Math.pow(groupAverages.get(i) - totalAverage, 2);
+            Q1 += temp;
+            if (printing && i + 1 != groupAverages.size())
+                System.out.printf("%.2f + ", temp);
+            else
+                System.out.printf("%.2f)", temp);
+        }
+        Q1 *= col;
+        System.out.printf(" = %.2f\n", Q1);
+        return Q1;
+    }
+
+    private double findQ2(boolean printing){
+        double[] rowAverage = new double[row];
+        double temp = 0;
+
+        for (int i = 0; i < row; i++) {
+            for (int j = 0; j < col; j++) {
+                rowAverage[i] += X[i][j];
+            }
+            rowAverage[i] /= col;
+        }
+
+        if (printing) System.out.print("Q2 = ");
+        for (int i = 0; i < X.length; i++) {
+            for (int j = 0; j < X[0].length; j++)
+            {
+                temp = Math.pow(X[i][j] - rowAverage[i],2);
+                Q2 += temp;
+                if (printing && !(i + 1 == X.length && j + 1 == X[0].length)){
+                    System.out.printf("%.2f + ", temp);
+                } else
+                {
+                    System.out.printf("%.2f ", temp);
+                }
+
+            }
+            System.out.println();
+        }
+        System.out.printf(" = %.2f\n\n", Q2);
+        return Q2;
+    }
 
     private double findEstimationOfIntergroupVariance(boolean printing){
         if(printing){
